@@ -3,152 +3,275 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aumento De Quadro / Vaga Orçamento</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/script.js"></script>
+    <title>Formulário de Vagas e Aumento de Quadro</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
             background-color: #f4f4f4;
-            color: #333;
-        }
-        h1 {
-            color: #4CAF50;
-        }
-        form {
             display: flex;
-            flex-wrap: wrap;
-            background-color: #fff;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        section {
+            background: white;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .form-group {
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 800px;
             width: 100%;
-            margin-bottom: 15px;
         }
-        label {
-            display: block;
-            font-weight: bold;
+        .main-title {
+            text-align: center;
+            margin-bottom: 20px;
         }
-        input, select {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+        .form-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
         }
-        button {
+        .form-toggle button {
+            margin: 0 10px;
             padding: 10px 20px;
-            background-color: #4CAF50;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .form-toggle button:hover {
+            background-color: #0056b3;
+        }
+        .form-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .form-row {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-row label {
+            margin-bottom: 5px;
+        }
+        .form-row input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-row button {
+            grid-column: span 2;
+            padding: 10px;
+            background-color: #28a745;
             color: white;
             border: none;
+            border-radius: 5px;
             cursor: pointer;
-            border-radius: 4px;
-            margin-right: 10px;
         }
-        button:hover {
-            background-color: #45a049;
+        .form-row button:hover {
+            background-color: #218838;
         }
-        .output, .import-layout {
-            margin-top: 20px;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        .form-row input[type="text"] {
+            grid-column: span 2;
         }
     </style>
 </head>
 <body>
-    <h1>Aumento De Quadro / Vaga Orçamento</h1>
-    <div>
-        <label for="selectFormType">Selecione o Tipo:</label>
-        <select id="selectFormType" onchange="updateForm()">
-            <option value="aumentoDeQuadro">Aumento De Quadro</option>
-            <option value="vagaOrcamento">Vaga Orçamento</option>
-        </select>
-    </div>
-
-    <form id="aumentoDeQuadroForm" style="display: none;">
-        <!-- Campos para Aumento De Quadro -->
-    </form>
-
-    <form id="vagaOrcamentoForm" style="display: none;">
-        <!-- Campos para Vaga Orçamento -->
-    </form>
-
-    <div class="import-layout">
-        <label for="importString">Importar String de Layout</label>
-        <input type="text" id="importString">
-        <button type="button" onclick="importLayout()">Importar Layout</button>
-    </div>
-
-    <div class="output">
-        <h2>Output:</h2>
-        <p id="output"></p>
-    </div>
-
-    <script>
-        const aumentoDeQuadroFields = [
-            'codigoPlanilha', 'codigoCenario', 'codigo', 'dataInicial', 'dataFinal', 'codigoEmpresa',
-            'tipoSalario', 'codigoCargo', 'codigoEstabelecimento', 'codigoUnidadeOrganizacional', 'codigoCentroCustos',
-            'codigoSindicato', 'codigoMotivo', 'dataReferenciaEvento', 'codigoFolha', 'codigoEvento', 'valorEvento',
-            'tipoReserva', 'codigoPosicao', 'vinculoEmpregaticio', 'quantidade', 'orcado'
-        ];
-
-        const vagaOrcamentoFields = [
-            'codigoPlanilha', 'codigoCenario', 'codigo', 'dataInicial', 'dataFinal', 'codigoEmpresa',
-            'tipoSalario', 'codigoCargo', 'codigoEstabelecimento', 'codigoUnidadeOrganizacional', 'codigoCentroCustos',
-            'codigoSindicato', 'codigoPosicao', 'dataReferenciaEvento', 'codigoFolha', 'codigoEvento', 'valorEvento',
-            'tipoReserva', 'vinculoEmpregaticio', 'quantidade', 'orcado'
-        ];
-
-        function updateForm() {
-            const formType = document.getElementById('selectFormType').value;
-
-            document.getElementById('aumentoDeQuadroForm').style.display = formType === 'aumentoDeQuadro' ? 'block' : 'none';
-            document.getElementById('vagaOrcamentoForm').style.display = formType === 'vagaOrcamento' ? 'block' : 'none';
-        }
-
-        function generateOutput() {
-            const formType = document.getElementById('selectFormType').value;
-            const form = formType === 'aumentoDeQuadro' ? document.getElementById('aumentoDeQuadroForm') : document.getElementById('vagaOrcamentoForm');
-            const formData = new FormData(form);
-
-            const fieldNames = formType === 'aumentoDeQuadro' ? aumentoDeQuadroFields : vagaOrcamentoFields;
-            const outputArray = fieldNames.map(field => formData.get(field) || '');
-            document.getElementById('output').textContent = outputArray.join(';');
-        }
-
-        function importLayout() {
-            const importString = document.getElementById('importString').value;
-            const values = importString.split(';');
-            const formType = document.getElementById('selectFormType').value;
-            const fieldIds = formType === 'aumentoDeQuadro' ? aumentoDeQuadroFields : vagaOrcamentoFields;
-
-            fieldIds.forEach((id, index) => {
-                document.getElementById(id).value = values[index] || '';
-            });
-        }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            const formContainer = document.getElementById('aumentoDeQuadroForm');
-            aumentoDeQuadroFields.forEach(field => {
-                const div = document.createElement('div');
-                div.className = 'form-group';
-                div.innerHTML = `<label for="${field}">${field.replace(/([A-Z])/g, ' $1').trim()}</label><input type="${field.includes('Data') ? 'text' : 'number'}" id="${field}" ${field.includes('Orcado') ? 'maxlength="1"' : ''}>`;
-                formContainer.appendChild(div);
-            });
-
-            const formContainerVaga = document.getElementById('vagaOrcamentoForm');
-            vagaOrcamentoFields.forEach(field => {
-                const div = document.createElement('div');
-                div.className = 'form-group';
-                div.innerHTML = `<label for="${field}">${field.replace(/([A-Z])/g, ' $1').trim()}</label><input type="${field.includes('Data') ? 'text' : 'number'}" id="${field}" ${field.includes('Orcado') ? 'maxlength="1"' : ''}>`;
-                formContainerVaga.appendChild(div);
-            });
-
-            updateForm();
-        });
-    </script>
+    <section>
+        <h1 class="main-title">Formulário</h1>
+        <div class="form-toggle">
+            <button onclick="switchForm('aumentoDeQuadro')">Aumento De Quadro</button>
+            <button onclick="switchForm('vaga')">Vaga</button>
+        </div>
+        <form id="form-aumentoDeQuadro" class="form-container">
+            <div class="form-row">
+                <label for="codigoPlanilhaA">Código Planilha:</label>
+                <input id="codigoPlanilhaA" name="codigoPlanilhaA" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="codigoCenarioA">Código do Cenário:</label>
+                <input id="codigoCenarioA" name="codigoCenarioA" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="codigoA">Código:</label>
+                <input id="codigoA" name="codigoA" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="dataInicialA">Data Inicial:</label>
+                <input id="dataInicialA" name="dataInicialA" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="dataFinalA">Data Final:</label>
+                <input id="dataFinalA" name="dataFinalA" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="codigoEmpresaA">Código da Empresa:</label>
+                <input id="codigoEmpresaA" name="codigoEmpresaA" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="tipoSalarioA">Tipo de Salário:</label>
+                <input id="tipoSalarioA" name="tipoSalarioA" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="codigoCargoA">Código do Cargo:</label>
+                <input id="codigoCargoA" name="codigoCargoA" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="codigoEstabelecimentoA">Código do Estabelecimento:</label>
+                <input id="codigoEstabelecimentoA" name="codigoEstabelecimentoA" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="codigoUnidadeOrganizacionalA">Código da Unidade Organizacional:</label>
+                <input id="codigoUnidadeOrganizacionalA" name="codigoUnidadeOrganizacionalA" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="codigoCentroCustosA">Código do Centro de Custos:</label>
+                <input id="codigoCentroCustosA" name="codigoCentroCustosA" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="codigoSindicatoA">Código do Sindicato:</label>
+                <input id="codigoSindicatoA" name="codigoSindicatoA" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="codigoMotivoA">Código do Motivo:</label>
+                <input id="codigoMotivoA" name="codigoMotivoA" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="dataReferenciaEventoA">Data de Referência do Evento:</label>
+                <input id="dataReferenciaEventoA" name="dataReferenciaEventoA" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="codigoFolhaA">Código da Folha:</label>
+                <input id="codigoFolhaA" name="codigoFolhaA" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="codigoEventoA">Código do Evento:</label>
+                <input id="codigoEventoA" name="codigoEventoA" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="valorEventoA">Valor do Evento:</label>
+                <input id="valorEventoA" name="valorEventoA" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="tipoReservaA">Tipo da Reserva:</label>
+                <input id="tipoReservaA" name="tipoReservaA" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="codigoPosicaoA">Código da Posição:</label>
+                <input id="codigoPosicaoA" name="codigoPosicaoA" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="vinculoEmpregaticioA">Vínculo Empregatício:</label>
+                <input id="vinculoEmpregaticioA" name="vinculoEmpregaticioA" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="quantidadeA">Quantidade:</label>
+                <input id="quantidadeA" name="quantidadeA" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="orcadoA">Orçado:</label>
+                <input id="orcadoA" name="orcadoA" type="text" />
+            </div>
+            <div class="form-row">
+                <button type="button" onclick="exportData('aumentoDeQuadro')">Exportar</button>
+                <input type="text" id="import-input-aumentoDeQuadro" placeholder="Importar layout" />
+                <button type="button" onclick="importData('aumentoDeQuadro')">Importar</button>
+            </div>
+        </form>
+        <form id="form-vaga" class="form-container" style="display:none;">
+            <div class="form-row">
+                <label for="codigoPlanilhaV">Código Planilha:</label>
+                <input id="codigoPlanilhaV" name="codigoPlanilhaV" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="codigoCenarioV">Código do Cenário:</label>
+                <input id="codigoCenarioV" name="codigoCenarioV" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="codigoV">Código:</label>
+                <input id="codigoV" name="codigoV" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="dataInicialV">Data Inicial:</label>
+                <input id="dataInicialV" name="dataInicialV" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="dataFinalV">Data Final:</label>
+                <input id="dataFinalV" name="dataFinalV" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="codigoEmpresaV">Código da Empresa:</label>
+                <input id="codigoEmpresaV" name="codigoEmpresaV" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="tipoSalarioV">Tipo de Salário:</label>
+                <input id="tipoSalarioV" name="tipoSalarioV" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="codigoCargoV">Código do Cargo:</label>
+                <input id="codigoCargoV" name="codigoCargoV" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="codigoEstabelecimentoV">Código do Estabelecimento:</label>
+                <input id="codigoEstabelecimentoV" name="codigoEstabelecimentoV" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="codigoUnidadeOrganizacionalV">Código da Unidade Organizacional:</label>
+                <input id="codigoUnidadeOrganizacionalV" name="codigoUnidadeOrganizacionalV" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="codigoCentroCustosV">Código do Centro de Custos:</label>
+                <input id="codigoCentroCustosV" name="codigoCentroCustosV" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="codigoSindicatoV">Código do Sindicato:</label>
+                <input id="codigoSindicatoV" name="codigoSindicatoV" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="codigoPosicaoV">Código da Posição:</label>
+                <input id="codigoPosicaoV" name="codigoPosicaoV" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="dataReferenciaEventoV">Data de Referência do Evento:</label>
+                <input id="dataReferenciaEventoV" name="dataReferenciaEventoV" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="codigoFolhaV">Código da Folha:</label>
+                <input id="codigoFolhaV" name="codigoFolhaV" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="codigoEventoV">Código do Evento:</label>
+                <input id="codigoEventoV" name="codigoEventoV" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="valorEventoV">Valor do Evento:</label>
+                <input id="valorEventoV" name="valorEventoV" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="tipoReservaV">Tipo da Reserva:</label>
+                <input id="tipoReservaV" name="tipoReservaV" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="vinculoEmpregaticioV">Vínculo Empregatício:</label>
+                <input id="vinculoEmpregaticioV" name="vinculoEmpregaticioV" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="quantidadeV">Quantidade:</label>
+                <input id="quantidadeV" name="quantidadeV" type="text" />
+            </div>
+            <div class="form-row">
+                <label for="orcadoV">Orçado:</label>
+                <input id="orcadoV" name="orcadoV" type="text" />
+            </div>
+            <div class="form-row">
+                <button type="button" onclick="exportData('vaga')">Exportar</button>
+                <input type="text" id="import-input-vaga" placeholder="Importar layout" />
+                <button type="button" onclick="importData('vaga')">Importar</button>
+            </div>
+        </form>
+    </section>
 </body>
 </html>
