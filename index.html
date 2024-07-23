@@ -32,11 +32,15 @@
             color: white;
             border: none;
             cursor: pointer;
+            margin-right: 10px;
         }
         button:hover {
             background-color: #45a049;
         }
         .output {
+            margin-top: 20px;
+        }
+        .import-layout {
             margin-top: 20px;
         }
     </style>
@@ -133,7 +137,13 @@
             <input type="text" id="orcado" maxlength="1">
         </div>
         <button type="button" onclick="generateOutput()">Gerar Output</button>
+        <button type="button" onclick="importLayout()">Importar Layout</button>
     </form>
+
+    <div class="import-layout">
+        <label for="importString">Importar String de Layout</label>
+        <input type="text" id="importString">
+    </div>
 
     <div class="output">
         <h2>Output:</h2>
@@ -168,11 +178,44 @@
                 'vinculoEmpregaticio',
                 'quantidade',
                 'orcado'
-                
             ];
 
             const outputArray = fieldNames.map(field => formData.get(field) || '');
             document.getElementById('output').textContent = outputArray.join(';');
+        }
+
+        function importLayout() {
+            const importString = document.getElementById('importString').value;
+            const values = importString.split(';');
+            
+            const fieldIds = [
+                'codigoPlanilha',
+                'codigoCenario',
+                'codigo',
+                'dataInicial',
+                'dataFinal',
+                'codigoEmpresa',
+                'tipoSalario',
+                'codigoCargo',
+                'codigoEstabelecimento',
+                'codigoUnidadeOrganizacional',
+                'codigoCentroCustos',
+                'codigoSindicato',
+                'codigoMotivo',
+                'dataReferenciaEvento',
+                'codigoFolha',
+                'codigoEvento',
+                'valorEvento',
+                'tipoReserva',
+                'codigoPosicao',
+                'vinculoEmpregaticio',
+                'quantidade',
+                'orcado'
+            ];
+
+            fieldIds.forEach((id, index) => {
+                document.getElementById(id).value = values[index] || '';
+            });
         }
     </script>
 </body>
